@@ -174,7 +174,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:8px;
       margin-top:12px;
     }
@@ -523,7 +523,6 @@
             <div class="stat">⭐ Score<span id="score">0</span></div>
             <div class="stat">🪙 Pièces<span id="coins">0</span></div>
             <div class="stat">🔥 Série<span id="streak">0</span></div>
-            <div class="stat">⏱️ Temps<span id="timer">60</span></div>
           </div>
         </section>
 
@@ -542,7 +541,6 @@
             <strong>Tables CE2 travaillées</strong>
             <div class="tables" id="tables"></div>
             <div class="btns">
-              <button class="dark" onclick="pauseGame()">Pause</button>
               <button class="dark" onclick="restartCurrentMode()">Recommencer</button>
             </div>
           </div>
@@ -680,7 +678,6 @@
       const m = modes[mode];
       selectedTables = [...m.tables];
       goal = m.goal;
-      secondsLeft = m.seconds;
       score = 0;
       coins = 0;
       streak = 0;
@@ -693,7 +690,6 @@
       updateStats();
       newQuestion();
       showScreen("gameScreen");
-      startTimer();
       saveProgress();
       setTimeout(() => answerInput.focus(), 200);
     }
@@ -718,7 +714,6 @@
       document.getElementById("coins").textContent = coins;
       document.getElementById("coinsText").textContent = coins;
       document.getElementById("streak").textContent = streak;
-      document.getElementById("timer").textContent = secondsLeft;
       document.getElementById("bar").style.width = Math.min((coins/goal)*100,100) + "%";
 
       if(coins >= goal){
