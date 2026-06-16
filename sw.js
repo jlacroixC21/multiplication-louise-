@@ -1,7 +1,7 @@
 // Service Worker — Le Trésor CE2 de Louise
 // Stratégie : cache-first pour fonctionnement 100% hors-ligne
 
-const CACHE_NAME = "tresor-ce2-louise-v2";
+const CACHE_NAME = "tresor-ce2-louise-v3";
 const ASSETS = [
   "./",
   "./index.html",
