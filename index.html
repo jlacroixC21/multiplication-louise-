@@ -150,114 +150,147 @@
       cursor:pointer;
     }
 
-    /* PLATEAU */
+    /* PLATEAU SINUEUX */
     .board-wrap{
       background:linear-gradient(180deg,#cbeaff,#e8f7d4);
       border-radius:18px;
-      padding:14px 10px;
+      padding:18px 14px;
       position:relative;
       box-shadow:inset 0 2px 6px rgba(0,0,0,.06);
       overflow:hidden;
     }
     .board-wrap::before{
-      content:"☁️ ☁️";
+      content:"☁️    ☁️";
       position:absolute;
       top:6px;left:14px;
       font-size:14px;
       opacity:.6;
+      letter-spacing:30px;
     }
     .board-wrap::after{
-      content:"🌳 🌸";
+      content:"🌳 🌸 🌳";
       position:absolute;
       bottom:6px;right:14px;
       font-size:14px;
       opacity:.7;
+      letter-spacing:8px;
+    }
+
+    /* Chemin SVG en arrière-plan */
+    .path-svg{
+      position:absolute;
+      top:18px;left:14px;right:14px;bottom:18px;
+      width:calc(100% - 28px);
+      height:calc(100% - 36px);
+      pointer-events:none;
+      z-index:0;
     }
 
     .board{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:8px;
       position:relative;
       z-index:1;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
     }
-    .row-reverse{direction:rtl;}
-    .row-reverse .cell{direction:ltr;}
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:4px;
+    }
+    .row.reverse{flex-direction:row-reverse;}
 
     .cell{
-      aspect-ratio:1;
+      width:54px;
+      height:54px;
       background:var(--path);
-      border:2px solid #c79a52;
-      border-radius:12px;
+      border:3px solid #c79a52;
+      border-radius:50%;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      font-size:11px;
+      font-size:10px;
       font-weight:700;
       color:#5a3a10;
       position:relative;
-      box-shadow:0 2px 0 #b8893c;
-      min-height:48px;
+      box-shadow:0 3px 0 #b8893c, 0 5px 8px rgba(0,0,0,.12);
+      flex-shrink:0;
     }
     .cell .num{
-      font-size:11px;
+      font-size:9px;
       opacity:.55;
       line-height:1;
-      margin-bottom:2px;
+      position:absolute;
+      top:3px;
+      left:50%;
+      transform:translateX(-50%);
     }
-    .cell .emoji{font-size:22px;line-height:1;}
+    .cell .emoji{font-size:22px;line-height:1;margin-top:6px;}
 
     .cell.start{
-      background:linear-gradient(180deg,#a4e7ad,#7fc94a);
+      background:radial-gradient(circle at 35% 30%,#c1f0aa,#7fc94a);
       border-color:#3f8e23;
       color:#1a4a0c;
-      box-shadow:0 2px 0 #3f8e23;
+      box-shadow:0 3px 0 #3f8e23, 0 5px 8px rgba(0,0,0,.15);
     }
-    .cell.start .emoji{font-size:18px;}
-    .cell.start .label{font-size:9px;letter-spacing:.5px;}
+    .cell.start .emoji{font-size:18px;margin-top:0;}
+    .cell.start .label{font-size:8px;letter-spacing:.3px;font-weight:900;margin-top:1px;}
 
     .cell.arrival{
-      background:linear-gradient(180deg,#ffd470,#ffbf20);
+      background:radial-gradient(circle at 35% 30%,#ffe79a,#ffbf20);
       border-color:#a87100;
       color:#5a3700;
-      box-shadow:0 2px 0 #a87100;
+      box-shadow:0 3px 0 #a87100, 0 5px 10px rgba(0,0,0,.2);
+      animation:gleam 2s ease-in-out infinite;
     }
-    .cell.arrival .emoji{font-size:22px;}
-    .cell.arrival .label{font-size:9px;}
+    @keyframes gleam{
+      0%,100%{box-shadow:0 3px 0 #a87100, 0 5px 10px rgba(0,0,0,.2);}
+      50%{box-shadow:0 3px 0 #a87100, 0 5px 18px rgba(255,191,32,.7);}
+    }
+    .cell.arrival .emoji{font-size:24px;margin-top:0;}
+    .cell.arrival .label{font-size:8px;font-weight:900;}
 
     .cell.bonus{
-      background:linear-gradient(180deg,#fff3a8,#ffe24e);
+      background:radial-gradient(circle at 35% 30%,#fff8c4,#ffe24e);
       border-color:#caa10a;
-      box-shadow:0 2px 0 #caa10a;
+      box-shadow:0 3px 0 #caa10a, 0 5px 8px rgba(0,0,0,.15);
     }
     .cell.trap{
-      background:linear-gradient(180deg,#ffcacf,#ff8a96);
+      background:radial-gradient(circle at 35% 30%,#ffd0d6,#ff8a96);
       border-color:#b54151;
-      box-shadow:0 2px 0 #b54151;
+      box-shadow:0 3px 0 #b54151, 0 5px 8px rgba(0,0,0,.15);
     }
     .cell.shortcut{
-      background:linear-gradient(180deg,#bdd8ff,#7cb0f0);
+      background:radial-gradient(circle at 35% 30%,#cce0ff,#7cb0f0);
       border-color:#2566b8;
-      box-shadow:0 2px 0 #2566b8;
+      box-shadow:0 3px 0 #2566b8, 0 5px 8px rgba(0,0,0,.15);
     }
 
     .cell.current{
       animation:pulse 1.2s ease-in-out infinite;
-      box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--purple), 0 4px 10px rgba(0,0,0,.2);
-      z-index:2;
+      z-index:5;
     }
     @keyframes pulse{
-      0%,100%{transform:scale(1);}
-      50%{transform:scale(1.05);}
+      0%,100%{transform:scale(1) translateY(0);}
+      50%{transform:scale(1.12) translateY(-2px);}
     }
 
     .pawn{
       position:absolute;
-      font-size:24px;
+      font-size:26px;
       pointer-events:none;
-      z-index:3;
-      filter:drop-shadow(0 2px 3px rgba(0,0,0,.3));
+      z-index:10;
+      filter:drop-shadow(0 3px 4px rgba(0,0,0,.35));
+      top:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      animation:hop .8s ease-in-out infinite;
+    }
+    @keyframes hop{
+      0%,100%{transform:translateX(-50%) translateY(0);}
+      50%{transform:translateX(-50%) translateY(-4px);}
     }
 
     /* PANNEAU QUESTION */
@@ -462,6 +495,12 @@
       </div>
 
       <div class="board-wrap">
+        <svg class="path-svg" viewBox="0 0 500 320" preserveAspectRatio="none">
+          <path d="M 40,55 L 460,55 Q 490,55 490,90 Q 490,160 460,160 L 40,160 Q 10,160 10,195 Q 10,265 40,265 L 460,265"
+                fill="none" stroke="#e4b873" stroke-width="22" stroke-linecap="round" opacity=".55"/>
+          <path d="M 40,55 L 460,55 Q 490,55 490,90 Q 490,160 460,160 L 40,160 Q 10,160 10,195 Q 10,265 40,265 L 460,265"
+                fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round" opacity=".8"/>
+        </svg>
         <div class="board" id="board"></div>
       </div>
 
@@ -534,7 +573,7 @@
     // Rangée 2 (droite→gauche, donc 5 à droite, 9 à gauche) : 9,8,7,6,5
     // Rangée 3 (gauche→droite) : 10,11,12,13,14
     const BOARD = [
-      {type:"start",   label:"DÉPART"},               // 0
+      {type:"start",   label:"DÉPART", emoji:"🏁"},  // 0
       {type:"normal"},                                 // 1
       {type:"bonus",   emoji:"🌟"},                    // 2
       {type:"normal"},                                 // 3
@@ -639,52 +678,55 @@
       const board = document.getElementById("board");
       board.innerHTML = "";
 
-      // Ordre d'affichage en serpent :
-      // Rangée 1 : 0,1,2,3,4
-      // Rangée 2 : 9,8,7,6,5
-      // Rangée 3 : 10,11,12,13,14
-      const order = [
-        0,1,2,3,4,
-        9,8,7,6,5,
-        10,11,12,13,14
+      // 3 rangées de 5 cases en serpent :
+      // Ligne 1 (gauche→droite) : 0,1,2,3,4
+      // Ligne 2 (droite→gauche)  : 5,6,7,8,9  (affichée à l'envers, donc 5 finit à droite)
+      // Ligne 3 (gauche→droite)  : 10,11,12,13,14
+      const rows = [
+        {indices:[0,1,2,3,4], reverse:false},
+        {indices:[5,6,7,8,9], reverse:true},
+        {indices:[10,11,12,13,14], reverse:false}
       ];
 
-      order.forEach(idx=>{
-        const cell = BOARD[idx];
-        const div = document.createElement("div");
-        div.className = "cell " + (cell.type || "normal");
-        div.dataset.pos = idx;
+      rows.forEach(r=>{
+        const rowDiv = document.createElement("div");
+        rowDiv.className = "row" + (r.reverse ? " reverse" : "");
 
-        const num = document.createElement("div");
-        num.className = "num";
-        num.textContent = idx;
-        div.appendChild(num);
+        r.indices.forEach(idx=>{
+          const cell = BOARD[idx];
+          const div = document.createElement("div");
+          div.className = "cell " + (cell.type || "normal");
+          div.dataset.pos = idx;
 
-        const content = document.createElement("div");
-        if(cell.emoji){
+          const num = document.createElement("div");
+          num.className = "num";
+          num.textContent = idx;
+          div.appendChild(num);
+
+          const content = document.createElement("div");
           content.className = "emoji";
-          content.textContent = cell.emoji;
-        } else if(cell.label){
-          content.className = "label";
-          content.textContent = cell.label;
-        } else {
-          content.className = "emoji";
-          content.textContent = "·";
-        }
-        div.appendChild(content);
+          content.textContent = cell.emoji || "·";
+          div.appendChild(content);
 
-        if(idx === position){
-          div.classList.add("current");
-          const pawn = document.createElement("div");
-          pawn.className = "pawn";
-          pawn.textContent = "🦊";
-          pawn.style.position = "absolute";
-          pawn.style.bottom = "-4px";
-          pawn.style.right = "-4px";
-          div.appendChild(pawn);
-        }
+          if(cell.label){
+            const lbl = document.createElement("div");
+            lbl.className = "label";
+            lbl.textContent = cell.label;
+            div.appendChild(lbl);
+          }
 
-        board.appendChild(div);
+          if(idx === position){
+            div.classList.add("current");
+            const pawn = document.createElement("div");
+            pawn.className = "pawn";
+            pawn.textContent = "🦊";
+            div.appendChild(pawn);
+          }
+
+          rowDiv.appendChild(div);
+        });
+
+        board.appendChild(rowDiv);
       });
 
       document.getElementById("posChip").textContent = position;
