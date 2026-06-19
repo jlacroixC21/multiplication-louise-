@@ -1,32 +1,16 @@
 {
-  "name": "Le Trésor CE2 de Louise",
-  "short_name": "Trésor Louise",
-  "description": "Jeu de tables de multiplication CE2",
-  "start_url": "./",
+  "name": "La Course des Tables",
+  "short_name": "Course Tables",
+  "description": "Jeu de plateau pour réviser les tables de multiplication",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#fff3c4",
-  "theme_color": "#5d35d4",
-  "lang": "fr",
+  "orientation": "portrait",
+  "background_color": "#4f46e5",
+  "theme_color": "#7c3aed",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
