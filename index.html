@@ -3,224 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>La Course des Tables</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Course Tables">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#7c3aed">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; font-family:-apple-system,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
-  body {
-    background:linear-gradient(160deg,#4f46e5 0%,#7c3aed 45%,#db2777 100%);
-    display:flex; align-items:center; justify-content:center; color:#1e293b;
-    user-select:none;
-  }
+  body { background:linear-gradient(160deg,#4f46e5 0%,#7c3aed 45%,#db2777 100%); display:flex; align-items:center; justify-content:center; color:#1e293b; user-select:none; }
   #app { width:100%; height:100%; max-width:760px; display:flex; flex-direction:column; padding:10px; gap:10px; }
-  .topbar {
-    background:rgba(255,255,255,0.95); border-radius:18px; padding:10px 16px;
-    display:flex; align-items:center; justify-content:space-between; box-shadow:0 8px 24px rgba(0,0,0,.25);
-  }
+  .topbar { background:rgba(255,255,255,0.95); border-radius:18px; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 8px 24px rgba(0,0,0,.25); }
   .title { font-size:clamp(18px,4vw,26px); font-weight:800; color:#7c3aed; letter-spacing:-.5px; }
   .title span { color:#db2777; }
   .progress { font-size:14px; font-weight:700; color:#475569; }
   .board-wrap { flex:1; display:flex; align-items:center; justify-content:center; min-height:0; }
-  .board {
-    width:100%; display:grid; grid-template-columns:repeat(8,1fr); gap:6px;
-    background:rgba(255,255,255,0.18); padding:10px; border-radius:20px;
-  }
-  .cell {
-    aspect-ratio:1; border-radius:12px; display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:clamp(11px,2.4vw,18px); position:relative;
-    background:#ffffff; color:#64748b; box-shadow:inset 0 -3px 0 rgba(0,0,0,.08);
-    transition:transform .15s;
-  }
+  .board { width:100%; display:grid; grid-template-columns:repeat(8,1fr); gap:6px; background:rgba(255,255,255,0.18); padding:10px; border-radius:20px; }
+  .cell { aspect-ratio:1; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:clamp(11px,2.4vw,18px); position:relative; background:#ffffff; color:#64748b; box-shadow:inset 0 -3px 0 rgba(0,0,0,.08); transition:transform .15s; }
   .cell .num { opacity:.55; }
   .cell.start { background:#22c55e; color:#fff; }
   .cell.finish { background:#f59e0b; color:#fff; }
   .cell.bonus { background:#bbf7d0; color:#15803d; }
   .cell.malus { background:#fecdd3; color:#be123c; }
   .cell .ic { font-size:clamp(13px,3vw,22px); }
-  .pawn {
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size:clamp(18px,4.5vw,30px); z-index:5;
-    filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));
-    animation:hop .4s ease;
-  }
+  .pawn { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:clamp(18px,4.5vw,30px); z-index:5; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4)); animation:hop .4s ease; }
   @keyframes hop { 0%{transform:translateY(0)} 50%{transform:translateY(-30%) scale(1.15)} 100%{transform:translateY(0)} }
   .cell.active { transform:scale(1.06); box-shadow:0 0 0 3px #fff, 0 0 0 6px #7c3aed; z-index:4; }
-  .panel {
-    background:rgba(255,255,255,0.97); border-radius:20px; padding:14px;
-    box-shadow:0 -6px 24px rgba(0,0,0,.25); min-height:150px;
-    display:flex; flex-direction:column; gap:10px;
-  }
+  .panel { background:rgba(255,255,255,0.97); border-radius:20px; padding:14px; box-shadow:0 -6px 24px rgba(0,0,0,.25); min-height:150px; display:flex; flex-direction:column; gap:10px; }
   .msg { text-align:center; font-size:clamp(15px,3.5vw,19px); font-weight:700; min-height:24px; color:#334155; }
-  .question { text-align:center; font-size:clamp(30px,9vw,52px); font-weight:900; color:#1e293b; letter-spacing:1px; }
-  .answers { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-  .answers button {
-    border:none; border-radius:16px; padding:16px 0; font-size:clamp(20px,5vw,30px); font-weight:800;
-    background:#ede9fe; color:#5b21b6; cursor:pointer; box-shadow:0 4px 0 #c4b5fd; transition:transform .08s;
-  }
-  .answers button:active { transform:translateY(3px); box-shadow:0 1px 0 #c4b5fd; }
-  .answers button.good { background:#22c55e; color:#fff; box-shadow:0 4px 0 #15803d; }
-  .answers button.bad { background:#ef4444; color:#fff; box-shadow:0 4px 0 #b91c1c; }
-  .answers button:disabled { opacity:.85; cursor:default; }
-  .bigbtn {
-    border:none; border-radius:18px; padding:18px; font-size:clamp(18px,4.5vw,24px); font-weight:800;
-    color:#fff; cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,.25); transition:transform .08s;
-  }
-  .bigbtn:active { transform:translateY(3px); box-shadow:0 2px 0 rgba(0,0,0,.25); }
-  .roll { background:linear-gradient(135deg,#f59e0b,#f97316); }
-  .dice-line { display:flex; align-items:center; justify-content:center; gap:14px; }
-  .dice { font-size:clamp(40px,11vw,64px); min-width:1.2em; text-align:center; }
-  .rolling { animation:spin .5s linear; }
-  @keyframes spin { from{transform:rotate(0) scale(1)} 50%{transform:rotate(180deg) scale(1.2)} to{transform:rotate(360deg) scale(1)} }
-  .overlay {
-    position:absolute; inset:0; background:rgba(30,27,75,.85); backdrop-filter:blur(4px);
-    display:flex; align-items:center; justify-content:center; z-index:50; text-align:center; padding:20px;
-  }
-  .card {
-    background:#fff; border-radius:24px; padding:30px 24px; max-width:420px; width:100%;
-    box-shadow:0 20px 60px rgba(0,0,0,.4);
-  }
-  .card h1 { font-size:clamp(26px,7vw,40px); color:#7c3aed; margin-bottom:6px; }
-  .card h1 span { color:#db2777; }
-  .card p { color:#475569; font-size:16px; line-height:1.5; margin-bottom:18px; }
-  .card .emoji { font-size:64px; margin-bottom:8px; }
-  .card .bigbtn { width:100%; background:linear-gradient(135deg,#7c3aed,#db2777); }
-  .stat { font-size:18px; font-weight:700; color:#334155; margin-bottom:16px; }
-  .stat b { color:#16a34a; }
-</style>
-</head>
-<body>
-<div id="app">
-  <div class="topbar">
-    <div class="title">La Course des <span>Tables</span> 🎲</div>
-    <div class="progress" id="progress">Case 0 / 39</div>
-  </div>
-  <div class="board-wrap"><div class="board" id="board"></div></div>
-  <div class="panel" id="panel">
-    <div class="msg" id="msg">Lance le dé pour commencer !</div>
-    <div class="dice-line"><div class="dice" id="dice">🎲</div></div>
-    <button class="bigbtn roll" id="rollBtn">🎲 Lancer le dé</button>
-  </div>
-</div>
-<div class="overlay" id="startOverlay">
-  <div class="card">
-    <div class="emoji">🚀</div>
-    <h1>La Course des <span>Tables</span></h1>
-    <p>Lance le dé, réponds à la multiplication.<br>
-    ✅ Bonne réponse → tu avances !<br>
-    ❌ Mauvaise réponse → tu recules de 2.<br>
-    Arrive le premier à la case finale 🏁</p>
-    <button class="bigbtn" id="playBtn">Jouer !</button>
-  </div>
-</div>
-<div class="overlay" id="winOverlay" style="display:none;">
-  <div class="card">
-    <div class="emoji">🏆</div>
-    <h1>Bravo&nbsp;!</h1>
-    <p id="winText">Tu as gagné&nbsp;!</p>
-    <div class="stat" id="winStat"></div>
-    <button class="bigbtn" id="replayBtn">Rejouer</button>
-  </div>
-</div>
-<script>
-const TOTAL=40, LAST=TOTAL-1;
-const BONUS={7:13,18:25,30:36};
-const MALUS={15:9,27:20,34:28};
-let pos=0,good=0,bad=0,rolls=0,busy=false;
-const boardEl=document.getElementById('board');
-const progressEl=document.getElementById('progress');
-const panel=document.getElementById('panel');
-const DICE_FACES=['','⚀','⚁','⚂','⚃','⚄','⚅'];
-function buildBoard(){
-  boardEl.innerHTML='';
-  const cols=8, rows=Math.ceil(TOTAL/cols), order=[];
-  for(let r=0;r<rows;r++){
-    const rc=[];
-    for(let c=0;c<cols;c++){ const i=r*cols+c; if(i<TOTAL) rc.push(i); }
-    if(r%2===1) rc.reverse();
-    order.push(...rc);
-  }
-  order.forEach(p=>{
-    const cell=document.createElement('div');
-    cell.className='cell'; cell.dataset.pos=p;
-    if(p===0){cell.classList.add('start');cell.innerHTML='<span class="ic">🏠</span>';}
-    else if(p===LAST){cell.classList.add('finish');cell.innerHTML='<span class="ic">🏁</span>';}
-    else if(BONUS[p]!==undefined){cell.classList.add('bonus');cell.innerHTML='<span class="ic">🪜</span>';}
-    else if(MALUS[p]!==undefined){cell.classList.add('malus');cell.innerHTML='<span class="ic">🐍</span>';}
-    else {cell.innerHTML='<span class="num">'+p+'</span>';}
-    boardEl.appendChild(cell);
-  });
-  renderPawn();
-}
-function renderPawn(){
-  document.querySelectorAll('.pawn').forEach(p=>p.remove());
-  document.querySelectorAll('.cell.active').forEach(c=>c.classList.remove('active'));
-  const cell=boardEl.querySelector('.cell[data-pos="'+pos+'"]');
-  if(cell){ cell.classList.add('active'); const pw=document.createElement('div'); pw.className='pawn'; pw.textContent='🦄'; cell.appendChild(pw); }
-  progressEl.textContent='Case '+pos+' / '+LAST;
-}
-function newQuestion(){ const a=2+Math.floor(Math.random()*9), b=1+Math.floor(Math.random()*10); return {a,b,r:a*b}; }
-function distractors(correct,a,b){
-  const set=new Set([correct]);
-  const cand=[correct+1,correct-1,correct+a,correct+b,a*(b+1),a*(b-1),(a+1)*b,correct+10,correct-10];
-  for(const c of cand){ if(c>0&&c!==correct) set.add(c); if(set.size>=4) break; }
-  let g=2; while(set.size<4){ const v=correct+g; if(v>0) set.add(v); g++; }
-  const arr=[...set].slice(0,4);
-  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
-  return arr;
-}
-function showQuestion(d){
-  const q=newQuestion(), opts=distractors(q.r,q.a,q.b);
-  panel.innerHTML='<div class="msg">Tu as fait '+d+' 🎲 — réponds bien pour avancer !</div>'+
-    '<div class="question">'+q.a+' × '+q.b+' = ?</div><div class="answers" id="answers"></div>';
-  const ae=document.getElementById('answers');
-  opts.forEach(v=>{ const b=document.createElement('button'); b.textContent=v; b.onclick=()=>handleAnswer(b,v,q.r,d,ae); ae.appendChild(b); });
-}
-function handleAnswer(btn,val,correct,d,ae){
-  [...ae.children].forEach(b=>b.disabled=true);
-  if(val===correct){ good++; btn.classList.add('good'); msgFlash('✅ Bravo ! Tu avances de '+d+'.'); setTimeout(()=>movePawn(d,true),700); }
-  else{ bad++; btn.classList.add('bad'); [...ae.children].forEach(b=>{ if(Number(b.textContent)===correct) b.classList.add('good'); }); msgFlash('❌ Oups ! C\'était '+correct+'. Tu recules de 2.'); setTimeout(()=>movePawn(-2,false),1100); }
-}
-function msgFlash(t){ const q=panel.querySelector('.msg'); if(q) q.textContent=t; }
-function movePawn(steps){
-  let target=pos+steps; if(target<0) target=0; if(target>LAST) target=LAST;
-  animateSteps(pos,target,()=>{
-    pos=target;
-    if(BONUS[pos]!==undefined){ const dest=BONUS[pos]; msgFlash('🪜 Super ! Une échelle te propulse en avant !'); setTimeout(()=>animateSteps(pos,dest,()=>{pos=dest;afterMove();}),600); }
-    else if(MALUS[pos]!==undefined){ const dest=MALUS[pos]; msgFlash('🐍 Aïe ! Un serpent te fait glisser en arrière...'); setTimeout(()=>animateSteps(pos,dest,()=>{pos=dest;afterMove();}),600); }
-    else afterMove();
-  });
-}
-function animateSteps(from,to,done){
-  const dir=to>=from?1:-1; let cur=from;
-  const step=()=>{ if(cur===to){ renderPawn(); done(); return; } cur+=dir; pos=cur; renderPawn(); setTimeout(step,180); };
-  step();
-}
-function afterMove(){ if(pos>=LAST){ win(); return; } resetPanel(); busy=false; }
-function resetPanel(){
-  panel.innerHTML='<div class="msg" id="msg">À toi de jouer ! Lance le dé 🎲</div>'+
-    '<div class="dice-line"><div class="dice" id="dice">'+DICE_FACES[1]+'</div></div>'+
-    '<button class="bigbtn roll" id="rollBtn">🎲 Lancer le dé</button>';
-  document.getElementById('rollBtn').onclick=roll;
-}
-function roll(){
-  if(busy) return; busy=true; rolls++;
-  const d=document.getElementById('dice'); d.classList.add('rolling');
-  let n=0; const iv=setInterval(()=>{ const v=1+Math.floor(Math.random()*6); d.textContent=DICE_FACES[v]; n++;
-    if(n>=8){ clearInterval(iv); d.classList.remove('rolling'); const f=1+Math.floor(Math.random()*6); d.textContent=DICE_FACES[f]; setTimeout(()=>showQuestion(f),400); } },70);
-}
-function win(){
-  document.getElementById('winText').textContent='Tu as atteint la case finale ! 🏁';
-  document.getElementById('winStat').innerHTML='Bonnes réponses : <b>'+good+'</b> &nbsp;•&nbsp; Erreurs : '+bad+'<br>Lancers de dé : '+rolls;
-  document.getElementById('winOverlay').style.display='flex';
-}
-function startGame(){ pos=0;good=0;bad=0;rolls=0;busy=false; buildBoard(); resetPanel(); }
-document.getElementById('playBtn').onclick=()=>{ document.getElementById('startOverlay').style.display='none'; startGame(); };
-document.getElementById('replayBtn').onclick=()=>{ document.getElementById('winOverlay').style.display='none'; startGame(); };
-document.getElementById('rollBtn').onclick=roll;
-buildBoard();
-</script>
-</body>
-</html>
+  .question {
